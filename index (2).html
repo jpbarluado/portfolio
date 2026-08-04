@@ -1,0 +1,562 @@
+<!--
+  ================================================================
+  PORTFOLIO — clean white, resume-style
+  Navigation = a vertical stack of shadowed BOX BUTTONS.
+  Click a box → that section opens. "← Menu" returns home.
+  Single file, no framework, HTML + CSS + vanilla JS.
+
+  FILL IN EVERY  [[ TODO ]]  BEFORE PUBLISHING (search "TODO").
+  The contact form is UI only — see the TODO on the <form> tag.
+  ================================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[[ TODO: Your Name ]] — Portfolio</title>
+<meta name="description" content="[[ TODO: Your Name ]] — portfolio: profile, skills, work history, education and awards.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============ tokens — white / resume ============ */
+:root{
+  --paper:#FFFFFF;
+  --paper-2:#FAFAFA;
+  --surface:#FFFFFF;
+  --line:#E8E8E8;
+  --line-2:#DADADA;
+  --ink:#16181D;
+  --ink-2:#4B4F57;
+  --ink-3:#868B93;
+  --accent:#1F7A6B;      /* one restrained accent */
+  --accent-2:#155A4F;
+  --accent-soft:#E8F3F0;
+
+  /* shadows do the visual work here */
+  --sh-1:0 1px 2px rgba(16,18,22,.06), 0 2px 6px rgba(16,18,22,.05);
+  --sh-2:0 2px 4px rgba(16,18,22,.06), 0 8px 20px rgba(16,18,22,.09);
+  --sh-3:0 6px 12px rgba(16,18,22,.08), 0 18px 40px rgba(16,18,22,.13);
+
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"Instrument Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  --r:14px; --r-lg:20px;
+  --col:680px;
+  --pad:clamp(20px,5vw,32px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--body);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+::selection{background:var(--accent-soft)}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{font-family:var(--display);font-weight:800;letter-spacing:-.028em;line-height:1.1;margin:0}
+p{margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:5px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:500}
+
+.page{max-width:var(--col);margin:0 auto;padding:clamp(36px,7vw,72px) var(--pad) 80px}
+
+/* ============ panels ============ */
+.panel{display:none;animation:fade .35s ease both}
+.panel.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.panel.on .stagger{animation:rise .5s cubic-bezier(.2,.7,.3,1) both}
+.panel.on .stagger:nth-child(2){animation-delay:.05s}
+.panel.on .stagger:nth-child(3){animation-delay:.1s}
+.panel.on .stagger:nth-child(4){animation-delay:.15s}
+.panel.on .stagger:nth-child(5){animation-delay:.2s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ============ HOME: intro + box menu ============ */
+.intro{margin-bottom:clamp(30px,5vw,44px)}
+.intro .badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;
+  color:var(--ink-2);background:var(--surface);border:1px solid var(--line);padding:6px 12px;
+  border-radius:99px;box-shadow:var(--sh-1);margin-bottom:22px}
+.intro .badge .live{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.intro h1{font-size:clamp(34px,6vw,54px);letter-spacing:-.04em}
+.intro .role{font-family:var(--display);font-weight:700;font-size:clamp(19px,3vw,28px);
+  letter-spacing:-.03em;color:var(--accent);margin-top:6px;min-height:1.3em}
+.caret{display:inline-block;width:.6ch;background:var(--accent);margin-left:1px;color:transparent;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.intro .lede{color:var(--ink-2);font-size:clamp(16px,1.7vw,18.5px);margin-top:18px;max-width:56ch}
+
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.stat{flex:1;min-width:120px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 18px;box-shadow:var(--sh-1)}
+.stat .num{font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:-.03em;line-height:1;display:flex;align-items:baseline;gap:1px}
+.stat .num .suf{color:var(--accent);font-size:.6em}
+.stat .lbl{color:var(--ink-3);font-size:13px;margin-top:6px}
+
+/* the requested BOX BUTTONS — stacked downward, with shadows */
+.menu{display:flex;flex-direction:column;gap:14px;margin-top:clamp(30px,5vw,42px)}
+.menu-label{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:2px}
+.box{
+  display:flex;align-items:center;gap:18px;width:100%;text-align:left;cursor:pointer;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:20px 22px;box-shadow:var(--sh-1);
+  transition:transform .22s cubic-bezier(.2,.7,.3,1),box-shadow .22s,border-color .22s;
+  font:inherit;color:inherit;position:relative;
+}
+.box:hover{transform:translateY(-4px);box-shadow:var(--sh-3);border-color:var(--line-2)}
+.box:active{transform:translateY(-1px);box-shadow:var(--sh-2)}
+.box .ic{
+  width:48px;height:48px;flex:none;border-radius:13px;display:grid;place-items:center;
+  background:var(--accent-soft);color:var(--accent-2);box-shadow:inset 0 0 0 1px rgba(31,122,107,.12);
+}
+.box .ic svg{width:23px;height:23px}
+.box .bt{flex:1;min-width:0}
+.box .bt .t{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.02em}
+.box .bt .s{font-size:14px;color:var(--ink-3);margin-top:2px}
+.box .arr{flex:none;color:var(--ink-3);transition:transform .22s,color .22s;font-size:20px}
+.box:hover .arr{transform:translateX(4px);color:var(--accent)}
+.box.feature{background:linear-gradient(180deg,var(--accent-soft),var(--surface));border-color:rgba(31,122,107,.2)}
+
+/* ============ section chrome ============ */
+.back{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font:inherit;font-size:14px;font-weight:600;
+  color:var(--ink-2);background:var(--surface);border:1px solid var(--line);border-radius:99px;
+  padding:9px 16px;box-shadow:var(--sh-1);margin-bottom:26px;transition:transform .2s,box-shadow .2s,border-color .2s}
+.back:hover{transform:translateY(-2px);box-shadow:var(--sh-2);border-color:var(--line-2)}
+.sec-head{margin-bottom:26px}
+.sec-head .eyebrow{display:block;margin-bottom:10px}
+.sec-head h2{font-size:clamp(26px,4vw,38px)}
+.sec-head p{color:var(--ink-2);margin-top:12px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:24px;box-shadow:var(--sh-1);margin-bottom:14px}
+.card h3{font-size:19px;margin-bottom:8px}
+.card p{color:var(--ink-2)}
+.card p + p{margin-top:10px}
+
+/* profile */
+.photo{aspect-ratio:1/1;max-width:150px;background:var(--paper-2);border:1px solid var(--line);
+  border-radius:20px;box-shadow:var(--sh-2);display:grid;place-items:center;color:var(--ink-3);
+  font-family:var(--mono);font-size:12px;margin-bottom:20px}
+.photo::after{content:"[[ photo ]]"}
+.spec{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:9px}
+.spec li{display:flex;gap:10px;color:var(--ink-2)}
+.spec .mk{color:var(--accent);flex:none}
+.goal{margin-top:18px;padding:16px 18px;border-left:3px solid var(--accent);background:var(--accent-soft);
+  border-radius:0 10px 10px 0;color:var(--ink-2)}
+
+/* skills */
+.skill-cat{margin-bottom:22px}
+.skill-cat-label{font-family:var(--mono);font-size:12px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:11px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+.skill-row{display:flex;flex-wrap:wrap;gap:9px}
+.skill{font-size:14.5px;font-weight:500;padding:10px 15px;border-radius:11px;cursor:default;
+  background:var(--surface);border:1px solid var(--line);color:var(--ink);box-shadow:var(--sh-1);
+  transition:transform .18s,box-shadow .18s,background .18s,color .18s;display:inline-flex;align-items:center;gap:8px}
+.skill .g{width:7px;height:7px;border-radius:2px;background:var(--accent);transition:transform .18s}
+.skill:hover,.skill:focus,.skill.active{transform:translateY(-2px);box-shadow:var(--sh-2);outline:none}
+.skill.active{background:var(--accent);color:#fff}
+.skill.active .g{background:#fff;transform:rotate(45deg)}
+.skill-detail{margin-top:18px;min-height:58px;background:var(--paper-2);border:1px solid var(--line);
+  border-radius:var(--r);padding:16px 18px;display:flex;gap:12px;align-items:center}
+.skill-detail .k{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;flex:none}
+.skill-detail .v{color:var(--ink-2);font-size:15px}
+
+/* form + input controls */
+.demo{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh-2)}
+.demo-top{padding:16px 20px;border-bottom:1px solid var(--line)}
+.demo-top h3{font-size:17px}
+.demo-top p{font-size:14px;color:var(--ink-3);margin-top:4px}
+.demo-in{padding:20px}
+.demo-in label{display:block;font-size:14px;font-weight:600;margin-bottom:8px}
+textarea{width:100%;min-height:80px;resize:vertical;background:var(--paper-2);color:var(--ink);
+  border:1px solid var(--line);border-radius:12px;font-family:inherit;font-size:15px;padding:12px}
+textarea:focus{outline:none;border-color:var(--accent)}
+.chips{display:flex;flex-direction:column;gap:6px;margin:12px 0 14px}
+.chip{background:var(--paper-2);border:1px solid var(--line);color:var(--ink-2);font-size:13.5px;
+  padding:9px 12px;border-radius:10px;cursor:pointer;text-align:left}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.go{width:100%;background:var(--accent);color:#fff;border:0;border-radius:12px;font:inherit;
+  font-size:15px;font-weight:600;padding:13px;cursor:pointer;box-shadow:var(--sh-1)}
+.go:hover{background:var(--accent-2)}
+.go:disabled{opacity:.5;cursor:default}
+.queues{display:grid;gap:8px;margin-top:16px}
+.q{border:1px solid var(--line);border-radius:11px;padding:12px 15px;font-size:14.5px;color:var(--ink-2);
+  display:flex;justify-content:space-between;align-items:center;background:var(--paper-2);transition:.2s}
+.q.won{border-color:var(--accent);background:var(--accent-soft);color:var(--ink);font-weight:600;box-shadow:var(--sh-1)}
+.q .sc{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.q.won .sc{color:var(--accent-2)}
+.verdict{margin-top:14px;font-size:14.5px;color:var(--ink-2);min-height:1.4em}
+.verdict b{color:var(--accent-2)}
+.note{font-size:13px;color:var(--ink-3);margin-top:14px}
+
+/* work timeline */
+.tl{position:relative;padding-left:30px}
+.tl::before{content:"";position:absolute;left:5px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.tl-item{position:relative;margin-bottom:12px}
+.tl-item::before{content:"";position:absolute;left:-30px;top:22px;width:11px;height:11px;border-radius:50%;
+  background:var(--surface);border:2px solid var(--line-2);z-index:2;transition:.2s}
+.tl-item.open::before{background:var(--accent);border-color:var(--accent-2)}
+.tl-btn{width:100%;text-align:left;font:inherit;cursor:pointer;color:inherit;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh-1);
+  display:flex;justify-content:space-between;align-items:center;gap:12px;transition:box-shadow .2s,border-color .2s}
+.tl-btn:hover{box-shadow:var(--sh-2);border-color:var(--line-2)}
+.tl-item.open .tl-btn{border-color:var(--accent);border-radius:var(--r) var(--r) 0 0}
+.tl-role{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-.02em;display:block}
+.tl-org{font-size:14px;color:var(--ink-2);margin-top:2px;display:block}
+.tl-right{display:flex;align-items:center;gap:12px;flex:none}
+.tl-when{font-family:var(--mono);font-size:12.5px;color:var(--ink-3);white-space:nowrap}
+.tl-caret{color:var(--accent-2);font-size:17px;width:14px;text-align:center;transition:transform .25s}
+.tl-item.open .tl-caret{transform:rotate(45deg)}
+.tl-body{display:grid;grid-template-rows:0fr;overflow:hidden;border:1px solid var(--accent);border-top:0;
+  border-radius:0 0 var(--r) var(--r);transition:grid-template-rows .3s ease;background:var(--surface)}
+.tl-item.open .tl-body{grid-template-rows:1fr}
+.tl-in{min-height:0;overflow:hidden}
+.tl-item.open .tl-in{padding:2px 18px 18px}
+.tl-body ul{margin:0;padding-left:17px;color:var(--ink-2)}
+.tl-body li{margin-bottom:6px}
+@media(max-width:560px){.tl-btn{flex-direction:column;align-items:flex-start;gap:7px}.tl-right{width:100%;justify-content:space-between}}
+
+/* awards */
+.cert{display:flex;gap:16px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:20px;box-shadow:var(--sh-1);margin-bottom:12px;transition:transform .2s,box-shadow .2s}
+.cert:hover{transform:translateY(-2px);box-shadow:var(--sh-2)}
+.cert .badge{width:44px;height:44px;flex:none;border-radius:12px;display:grid;place-items:center;
+  background:var(--accent-soft);color:var(--accent-2);font-size:20px}
+.cert h3{font-size:16.5px}
+.cert .iss{font-size:13.5px;color:var(--ink-3);margin-top:3px}
+.cert a{font-size:13.5px;font-weight:600;color:var(--accent-2);margin-top:8px;display:inline-block}
+
+/* contact */
+.c-link{display:flex;align-items:center;gap:13px;padding:15px 18px;border-radius:var(--r);
+  background:var(--surface);border:1px solid var(--line);box-shadow:var(--sh-1);margin-bottom:10px;
+  transition:transform .2s,box-shadow .2s,border-color .2s}
+.c-link:hover{transform:translateY(-2px);box-shadow:var(--sh-2);border-color:var(--line-2)}
+.c-link .ci{width:38px;height:38px;flex:none;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-2)}
+.c-link .ci svg{width:18px;height:18px}
+.c-link .ct{font-weight:600;font-size:15px}
+.c-link .cs{font-size:13px;color:var(--ink-3)}
+.copied{font-size:14px;color:var(--accent-2);min-height:1.3em;margin:4px 0 18px}
+.form{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px;box-shadow:var(--sh-1)}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:14px;font-weight:600;margin-bottom:7px}
+.field input,.field textarea{width:100%;font:inherit;font-size:15px;padding:12px 14px;border-radius:11px;
+  background:var(--paper-2);border:1px solid var(--line);color:var(--ink)}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--accent)}
+.form .go{margin-top:2px}
+.form-note{font-size:12.5px;color:var(--ink-3);margin-top:11px;text-align:center}
+
+.foot{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:12px;color:var(--ink-3);text-align:center}
+
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.caret{display:none}}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<!-- ================= HOME ================= -->
+<section class="panel on" id="p-home">
+  <div class="intro">
+    <span class="badge stagger"><span class="live"></span>Open to new opportunities</span>
+    <h1 class="stagger">Hi, I'm [[ TODO: Your Name ]].</h1>
+    <div class="role stagger" id="roleLine" aria-label="Multi-disciplinary professional"></div>
+    <p class="lede stagger">
+      <!-- TODO: 1–2 sentences about you across your fields. -->
+      I work across operations, development and automation &mdash; taking things that are
+      manual or messy and making them run smoothly. Below is a bit about me, my experience,
+      and a look at how I work.
+    </p>
+    <div class="stats stagger">
+      <!-- TODO: real numbers only; delete a card rather than invent one -->
+      <div class="stat"><div class="num"><span data-count="20">0</span><span class="suf">+</span></div><div class="lbl">Projects</div></div>
+      <div class="stat"><div class="num"><span data-count="[[ N ]]" data-plain="N">0</span></div><div class="lbl">Years experience</div></div>
+      <div class="stat"><div class="num"><span data-count="[[ N ]]" data-plain="N">0</span></div><div class="lbl">Fields</div></div>
+    </div>
+  </div>
+
+  <div class="menu">
+    <div class="menu-label stagger">Explore</div>
+
+    <button class="box stagger" data-go="profile">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></span>
+      <span class="bt"><span class="t">Profile</span></span>
+      <span class="arr">→</span>
+    </button>
+
+    <button class="box stagger" data-go="skills">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span>
+      <span class="bt"><span class="t">Skills &amp; Technologies</span></span>
+      <span class="arr">→</span>
+    </button>
+
+    <button class="box stagger" data-go="work">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
+      <span class="bt"><span class="t">Work History</span></span>
+      <span class="arr">→</span>
+    </button>
+
+    <button class="box stagger" data-go="education">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg></span>
+      <span class="bt"><span class="t">Education History</span></span>
+      <span class="arr">→</span>
+    </button>
+
+    <button class="box stagger" data-go="awards">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="9" r="6"/><path d="M9 14l-2 7 5-3 5 3-2-7"/></svg></span>
+      <span class="bt"><span class="t">Awards &amp; Certifications</span></span>
+      <span class="arr">→</span>
+    </button>
+
+    <button class="box stagger" data-go="contact">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
+      <span class="bt"><span class="t">Contact</span></span>
+      <span class="arr">→</span>
+    </button>
+  </div>
+</section>
+
+<!-- ================= PROFILE ================= -->
+<section class="panel" id="p-profile">
+  <button class="back" data-go="home">← Menu</button>
+  <div class="sec-head stagger"><span class="eyebrow">Profile</span><h2>A little about me.</h2></div>
+  <div class="stagger">
+    <div class="photo"></div>
+    <div class="card">
+      <h3>A generalist who goes deep &mdash; across a few fields.</h3>
+      <p>
+        <!-- TODO: name your actual fields and the thread connecting them. -->
+        My experience spans [[ TODO: e.g. operations, customer service, data ]] and, more recently,
+        development and automation. The common thread: I like understanding how something really
+        works, then making it work better.
+      </p>
+      <ul class="spec">
+        <li><span class="mk">▸</span> [[ TODO: a strength from one field ]]</li>
+        <li><span class="mk">▸</span> [[ TODO: a strength from another field ]]</li>
+        <li><span class="mk">▸</span> Automation &amp; internal tools — turning manual work into reliable systems</li>
+      </ul>
+      <div class="goal"><strong>Where I'm headed:</strong> [[ TODO: a goal broad enough to fit your range. ]]</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SKILLS ================= -->
+<section class="panel" id="p-skills">
+  <button class="back" data-go="home">← Menu</button>
+  <div class="sec-head stagger"><span class="eyebrow">Skills &amp; Technologies</span><h2>What I work with.</h2><p>Hover or tap any item.</p></div>
+  <div class="stagger" id="skillsGrid"></div>
+  <div class="skill-detail stagger" id="skillDetail"><span class="k">Tip</span><span class="v" id="skillDetailText">Hover a skill to see how I use it.</span></div>
+</section>
+
+<!-- ================= WORK ================= -->
+<section class="panel" id="p-work">
+  <button class="back" data-go="home">← Menu</button>
+  <div class="sec-head stagger"><span class="eyebrow">Work History</span><h2>Where I've worked.</h2><p>Click a role to expand it.</p></div>
+  <div class="tl stagger" id="tl">
+    <div class="tl-item open">
+      <button class="tl-btn" aria-expanded="true">
+        <span><span class="tl-role">[[ TODO: Job title ]]</span><span class="tl-org">[[ TODO: Company ]] · [[ TODO: Location ]]</span></span>
+        <span class="tl-right"><span class="tl-when">[[ 2024 — present ]]</span><span class="tl-caret" aria-hidden="true">+</span></span>
+      </button>
+      <div class="tl-body"><div class="tl-in"><ul>
+        <li>[[ TODO: what you own — start with a verb ]]</li>
+        <li>[[ TODO: something you did, with a number ]]</li>
+        <li>[[ TODO: a detail specific to this role ]]</li>
+      </ul></div></div>
+    </div>
+    <div class="tl-item">
+      <button class="tl-btn" aria-expanded="false">
+        <span><span class="tl-role">[[ TODO: Job title ]]</span><span class="tl-org">[[ TODO: Company ]]</span></span>
+        <span class="tl-right"><span class="tl-when">[[ 2021 — 2024 ]]</span><span class="tl-caret" aria-hidden="true">+</span></span>
+      </button>
+      <div class="tl-body"><div class="tl-in"><ul><li>[[ TODO ]]</li><li>[[ TODO ]]</li></ul></div></div>
+    </div>
+    <div class="tl-item">
+      <button class="tl-btn" aria-expanded="false">
+        <span><span class="tl-role">[[ TODO: Job title ]]</span><span class="tl-org">[[ TODO: Company ]]</span></span>
+        <span class="tl-right"><span class="tl-when">[[ 2019 — 2021 ]]</span><span class="tl-caret" aria-hidden="true">+</span></span>
+      </button>
+      <div class="tl-body"><div class="tl-in"><ul><li>[[ TODO ]]</li></ul></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EDUCATION ================= -->
+<section class="panel" id="p-education">
+  <button class="back" data-go="home">← Menu</button>
+  <div class="sec-head stagger"><span class="eyebrow">Education History</span><h2>Where I studied.</h2></div>
+  <div class="card stagger">
+    <h3>[[ TODO: Degree ]]</h3>
+    <p style="color:var(--ink-3);font-size:14.5px">[[ TODO: University ]] · [[ 2015 — 2019 ]]</p>
+    <p>[[ TODO: Optional detail — honours, thesis, relevant course. Delete if none. ]]</p>
+  </div>
+  <div class="card stagger">
+    <h3>[[ TODO: Other programme, or delete this card ]]</h3>
+    <p style="color:var(--ink-3);font-size:14.5px">[[ TODO: Institution ]] · [[ year ]]</p>
+  </div>
+</section>
+
+<!-- ================= AWARDS ================= -->
+<section class="panel" id="p-awards">
+  <button class="back" data-go="home">← Menu</button>
+  <div class="sec-head stagger"><span class="eyebrow">Awards &amp; Certifications</span><h2>Credentials &amp; recognition.</h2></div>
+  <div class="stagger">
+    <div class="cert">
+      <div class="badge">★</div>
+      <div><h3>[[ TODO: Certificate name ]]</h3><div class="iss">[[ TODO: Issuer ]] · [[ 2025 ]]</div><a href="[[ TODO: credential URL ]]">Verify credential →</a></div>
+    </div>
+    <div class="cert">
+      <div class="badge">★</div>
+      <div><h3>[[ TODO: Certificate name ]]</h3><div class="iss">[[ TODO: Issuer ]] · [[ 2024 ]]</div><a href="[[ TODO: credential URL ]]">Verify credential →</a></div>
+    </div>
+    <div class="cert">
+      <div class="badge">🏆</div>
+      <div><h3>[[ TODO: Award name ]]</h3><div class="iss">[[ TODO: Awarded by ]] · [[ 2023 ]]</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="panel" id="p-contact">
+  <button class="back" data-go="home">← Menu</button>
+  <div class="sec-head stagger"><span class="eyebrow">Contact</span><h2>Let's talk.</h2><p>A role, a project, or a process worth improving — I'd be glad to hear from you.</p></div>
+
+  <div class="stagger">
+    <a class="c-link" href="[[ TODO: LinkedIn URL ]]">
+      <span class="ci"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.76-2.05 4.02 0 4.76 2.64 4.76 6.08V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.07 1.4-2.07 2.85V21h-4z"/></svg></span>
+      <span><span class="ct">LinkedIn</span><br><span class="cs">Connect with me</span></span>
+    </a>
+    <a class="c-link" href="[[ TODO: GitHub URL ]]">
+      <span class="ci"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg></span>
+      <span><span class="ct">GitHub</span><br><span class="cs">See my code</span></span>
+    </a>
+    <a class="c-link" href="mailto:[[ TODO: you@email.com ]]" id="mailLink" data-email="[[ TODO: you@email.com ]]">
+      <span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
+      <span><span class="ct">Email</span><br><span class="cs">Click to copy address</span></span>
+    </a>
+    <p class="copied" id="copiedMsg" aria-live="polite"></p>
+
+    <!-- TODO: to make this send, add action="https://formspree.io/f/XXXX" method="POST"
+         (or Web3Forms) and DELETE the preventDefault line in the form script. -->
+    <form class="form" id="contactForm" novalidate>
+      <div class="field"><label for="cf-name">Name</label><input id="cf-name" name="name" type="text" autocomplete="name" required></div>
+      <div class="field"><label for="cf-email">Email</label><input id="cf-email" name="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="cf-msg">Message</label><textarea id="cf-msg" name="message" required></textarea></div>
+      <button type="submit" class="go">Send message</button>
+      <p class="form-note" id="formNote"></p>
+    </form>
+  </div>
+</section>
+
+</div>
+
+<script>
+(function(){
+"use strict";
+var reduced = matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+/* ---------- clickable sections ---------- */
+var IDS = ["home","profile","skills","work","education","awards","contact"];
+var countersDone=false;
+function show(id){
+  if(IDS.indexOf(id)===-1) id="home";
+  IDS.forEach(function(s){ var p=document.getElementById("p-"+s); if(p) p.classList.toggle("on", s===id); });
+  if(location.hash!=="#"+id) history.replaceState(null,"","#"+id);
+  scrollTo({top:0,behavior:reduced?"auto":"smooth"});
+  var h=document.querySelector("#p-"+id+" h1, #p-"+id+" h2");
+  if(h){ h.setAttribute("tabindex","-1"); h.focus({preventScroll:true}); }
+  if(id==="home" && !countersDone){ countersDone=true; runCounters(); }
+}
+document.addEventListener("click",function(e){
+  var t=e.target.closest("[data-go]");
+  if(t){ e.preventDefault(); show(t.dataset.go); }
+});
+addEventListener("popstate",function(){ show((location.hash||"#home").slice(1)); });
+
+/* ---------- typing role ---------- */
+(function(){
+  var el=document.getElementById("roleLine");
+  /* TODO: your actual roles/fields */
+  var roles=["[[ Your primary role ]].","[[ Another field ]].","Automation Builder.","Problem-solver."];
+  if(reduced){ el.textContent=roles[0]; return; }
+  var ri=0,ci=0,del=false,cur=document.createElement("span");
+  cur.className="caret";cur.textContent=".";
+  (function tick(){
+    var w=roles[ri];ci+=del?-1:1;el.textContent=w.slice(0,ci);el.appendChild(cur);
+    var d=del?42:78;
+    if(!del&&ci===w.length){del=true;d=1500;}
+    else if(del&&ci===0){del=false;ri=(ri+1)%roles.length;d=340;}
+    setTimeout(tick,d);
+  })();
+})();
+
+/* ---------- counters ---------- */
+function runCounters(){
+  document.querySelectorAll("[data-count]").forEach(function(el){
+    var target=parseInt(el.getAttribute("data-count"),10),plain=el.getAttribute("data-plain");
+    if(isNaN(target)){ el.textContent=plain||el.getAttribute("data-count"); return; }
+    if(reduced){ el.textContent=target; return; }
+    var start=null;
+    (function step(ts){ if(start===null)start=ts; var t=Math.min((ts-start)/1100,1);
+      el.textContent=Math.round(target*(1-Math.pow(1-t,3))); if(t<1)requestAnimationFrame(step); })(0);
+  });
+}
+
+/* ---------- skills ---------- */
+(function(){
+  /* TODO: rename categories to YOUR fields; first group is a placeholder for a non-tech field. */
+  var GROUPS=[
+    ["[[ TODO: Your other field ]]",[["[[ skill ]]","[[ how you use it ]]"],["[[ skill ]]","[[ how you use it ]]"],["[[ skill ]]","[[ how you use it ]]"]]],
+    ["Development",[["Vibe coding","I build and ship working tools by directing AI and iterating fast — this site included."],["JavaScript","Custom logic and small web tools."],["Python","Scripting and data wrangling."],["SQL","Querying and shaping data."],["APIs & Webhooks","Wiring systems together."],["GitHub","Version control and deployment."]]],
+    ["Automation & AI",[["n8n","Workflow engine I build most automations in."],["Power Automate","Microsoft flows for Office 365."],["Copilot Studio","Agents over internal data."],["Slack automation","Bots, triggers and notifications for team channels."],["Alteryx","Data prep and analytics workflows."],["AI Integration","Language models inside real workflows."],["Prompt Engineering","Reliable, structured model output."]]]
+  ];
+  var grid=document.getElementById("skillsGrid"),detail=document.getElementById("skillDetailText"),active=null;
+  GROUPS.forEach(function(g){
+    var wrap=document.createElement("div");wrap.className="skill-cat";
+    var head=document.createElement("div");head.className="skill-cat-label";head.textContent=g[0];wrap.appendChild(head);
+    var row=document.createElement("div");row.className="skill-row";
+    g[1].forEach(function(s){
+      var b=document.createElement("button");b.className="skill";b.type="button";b.innerHTML='<span class="g"></span>'+s[0];
+      function showIt(){detail.textContent=s[1];if(active)active.classList.remove("active");b.classList.add("active");active=b;}
+      b.addEventListener("mouseenter",showIt);b.addEventListener("focus",showIt);b.addEventListener("click",showIt);
+      row.appendChild(b);
+    });
+    wrap.appendChild(row);grid.appendChild(wrap);
+  });
+})();
+
+/* ---------- work timeline ---------- */
+document.querySelectorAll(".tl-btn").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    var item=btn.closest(".tl-item");var open=item.classList.toggle("open");
+    btn.setAttribute("aria-expanded",open?"true":"false");
+  });
+});
+
+/* ---------- copy email ---------- */
+(function(){
+  var link=document.getElementById("mailLink"),msg=document.getElementById("copiedMsg");
+  link.addEventListener("click",function(e){
+    var addr=link.getAttribute("data-email");
+    if(navigator.clipboard&&navigator.clipboard.writeText){e.preventDefault();
+      navigator.clipboard.writeText(addr).then(function(){msg.textContent="Copied "+addr+" to your clipboard.";},function(){location.href=link.href;});}
+  });
+})();
+
+/* ---------- contact form (UI only) ---------- */
+(function(){
+  var form=document.getElementById("contactForm"),note=document.getElementById("formNote");
+  form.addEventListener("submit",function(e){
+    e.preventDefault(); /* TODO: delete once a real action= endpoint is set */
+    if(!form.checkValidity()){form.reportValidity();return;}
+    note.textContent="Thanks! (Demo only — wire the form to a relay to actually receive it.)";
+    note.style.color="var(--accent-2)";form.reset();
+  });
+})();
+
+/* ---------- init ---------- */
+show((location.hash||"#home").slice(1));
+
+})();
+</script>
+</body>
+</html>
