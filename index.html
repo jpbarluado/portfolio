@@ -129,10 +129,10 @@ p{margin:0}
 .card p + p{margin-top:10px}
 
 /* profile */
-.photo{aspect-ratio:1/1;max-width:150px;background:var(--paper-2);border:1px solid var(--line);
+.photo{aspect-ratio:1/1;max-width:150px;background:var(--paper-2) center/cover no-repeat;border:1px solid var(--line);
   border-radius:20px;box-shadow:var(--sh-2);display:grid;place-items:center;color:var(--ink-3);
-  font-family:var(--mono);font-size:12px;margin-bottom:20px}
-.photo::after{content:"JPB";font-family:var(--display);font-weight:800;font-size:34px;color:var(--line-2)}
+  font-family:var(--mono);font-size:12px;margin-bottom:20px;overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
 .spec{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:9px}
 .spec li{display:flex;gap:10px;color:var(--ink-2)}
 .spec .mk{color:var(--accent);flex:none}
@@ -297,7 +297,7 @@ textarea:focus{outline:none;border-color:var(--accent)}
   <button class="back" data-go="home">← Menu</button>
   <div class="sec-head stagger"><span class="eyebrow">Profile</span><h2>About me.</h2></div>
   <div class="stagger">
-    <div class="photo"></div>
+    <div class="photo"><img src="profile.jpg" alt="Jhon Philip Barluado"></div>
     <div class="card">
       <h3>A generalist who goes deep &mdash; from operations to automation.</h3>
       <p>
